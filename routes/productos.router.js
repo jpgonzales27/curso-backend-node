@@ -43,4 +43,26 @@ router.post('/', (req, res) => {
   });
 });
 
+/*
+podria ser PUT pero este actualiza todo el obejto
+PATCH solo actualiza los campos que le enviamos
+*/
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  res.json({
+    message: 'update patch',
+    data: body,
+    id,
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({
+    message: 'deleted',
+    id,
+  });
+});
+
 module.exports = router;
