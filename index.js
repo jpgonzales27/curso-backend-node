@@ -1,4 +1,6 @@
 const express = require('express'); //importamos express
+const faker = require('faker');
+
 const app = express(); //construye una app de express
 const port = 3000;
 
@@ -11,16 +13,25 @@ app.get('/ruta', (req, res) => {
 });
 
 app.get('/productos', (req, res) => {
-  res.json([
-    {
-      name: 'producto 1',
-      price: 10000,
-    },
-    {
-      name: 'producto 2',
-      price: 5000,
-    },
-  ]);
+  const productos = [];
+  const { size } = req.query;
+  const limit = size || 10;
+  for (let index = 0; index < limit; index++) {
+    productos.push({
+      name: faker.commerce.productName(),
+      price: parseInt(faker.commerce.price(), 10),
+      image: faker.image.imageUrl(),
+    });
+  }
+
+  res.json(productos);
+});
+
+/*
+todas las rutas especificas deben ir antes que las rutas dimanmicas :id
+*/
+app.get('/products/filter', (req, res) => {
+  res.send('Yo soy filter');
 });
 
 app.get('/productos/:id', (req, res) => {
@@ -40,6 +51,25 @@ app.get('/categoria/:categoriaId/productos/:productoId', (req, res) => {
     categoriaId,
     productoId,
   });
+});
+
+//query params
+app.get('/users', (req, res) => {
+  /* los query params son los valores que definimos en la url
+  despues el sigo ?
+  http://localhost:3000/users?limit=2&offset=3
+
+  const limit = req.query.limit;
+  const offset = req.query.offset;*/
+  const { limit, offset } = req.query;
+  if (req.query) {
+    res.json({
+      limit,
+      offset,
+    });
+  } else {
+    res.send('No hay query params');
+  }
 });
 
 app.listen(port, () => {
