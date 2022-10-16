@@ -6,8 +6,8 @@ const categoriasRouter = require('./categorias.router');
 function routerApi(app) {
   const router = express.Router();
   /*
-  definimoas que la url del enpoint comensara con
-  http://localhost:3000/api/v1/categorias
+    definimoas que la url del enpoint comensara con
+    http://localhost:3000/api/v1/categorias
   */
   app.use('/api/v1', router);
   router.use('/productos', productosRouter);
