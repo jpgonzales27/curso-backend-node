@@ -25,19 +25,33 @@ router.get('/filter', (req, res) => {
   res.send('Yo soy filter');
 });
 
+/*
+  STATUS CODE - - - - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+  Informational responses (100–199)
+  Successful responses (200–299)
+  Redirection messages (300–399)
+  Client error responses (400–499)
+  Server error responses (500–599)
+*/
 router.get('/:id', (req, res) => {
   // const id = req.params.id;
   const { id } = req.params;
-  res.json({
-    id,
-    name: 'producto',
-    price: 800,
-  });
+  if (id === '999') {
+    res.status(404).json({
+      message: 'Not Found',
+    });
+  } else {
+    res.status(200).json({
+      id,
+      name: 'producto',
+      price: 800,
+    });
+  }
 });
 
 router.post('/', (req, res) => {
   const body = req.body;
-  res.json({
+  res.status(201).json({
     message: 'created',
     data: body,
   });
