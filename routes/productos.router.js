@@ -11,8 +11,8 @@ const router = express.Router();
 */
 const service = new ProductoService();
 
-router.get('/', (req, res) => {
-  const productos = service.find();
+router.get('/', async (req, res) => {
+  const productos = await service.find();
   res.json(productos);
 });
 
@@ -23,16 +23,16 @@ router.get('/filter', (req, res) => {
   res.send('Yo soy filter');
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // const id = req.params.id;
   const { id } = req.params;
-  const producto = service.findOne(id);
+  const producto = await service.findOne(id);
   res.json(producto);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
-  const newProducto = service.create(body);
+  const newProducto = await service.create(body);
   res.status(201).json(newProducto);
 });
 
@@ -40,16 +40,24 @@ router.post('/', (req, res) => {
   podria ser PUT pero este actualiza todo el obejto
   PATCH solo actualiza los campos que le enviamos
 */
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  const producto = service.update(id, body);
-  res.json(producto);
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const producto = await service.update(id, body);
+    res.json(producto);
+  } catch (error) {
+    /*
+      capturamos el error que estamos lanzando desde el metodo update
+      en nuestro ServiceWorkerRegistration
+    */
+    res.status(404).json({ message: error.message });
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
-  const respuesta = service.delete(id);
+  const respuesta = await service.delete(id);
   res.json(respuesta);
 });
 

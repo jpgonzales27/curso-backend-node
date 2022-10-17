@@ -33,14 +33,18 @@ class ProductoService {
   }
 
   find() {
-    return this.productos;
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.productos);
+      }, 5000);
+    });
   }
 
-  findOne(id) {
+  async findOne(id) {
     return this.productos.find((item) => item.id === id);
   }
 
-  update(id, cambios) {
+  async update(id, cambios) {
     const index = this.productos.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error('Product not found');
@@ -67,7 +71,7 @@ class ProductoService {
     return this.productos;
   }
 
-  delete(id) {
+  async delete(id) {
     const index = this.productos.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error('Product not found');
