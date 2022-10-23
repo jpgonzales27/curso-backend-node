@@ -23,11 +23,15 @@ router.get('/filter', (req, res) => {
   res.send('Yo soy filter');
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   // const id = req.params.id;
-  const { id } = req.params;
-  const producto = await service.findOne(id);
-  res.json(producto);
+  try {
+    const { id } = req.params;
+    const producto = await service.findOne(id);
+    res.json(producto);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/', async (req, res) => {
