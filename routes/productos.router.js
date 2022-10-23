@@ -44,18 +44,14 @@ router.post('/', async (req, res) => {
   podria ser PUT pero este actualiza todo el obejto
   PATCH solo actualiza los campos que le enviamos
 */
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const body = req.body;
     const producto = await service.update(id, body);
     res.json(producto);
   } catch (error) {
-    /*
-      capturamos el error que estamos lanzando desde el metodo update
-      en nuestro ServiceWorkerRegistration
-    */
-    res.status(404).json({ message: error.message });
+    next(error);
   }
 });
 

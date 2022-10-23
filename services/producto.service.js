@@ -5,6 +5,7 @@
   desligando de esta responsabilidad al router
 */
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class ProductoService {
   constructor() {
@@ -20,6 +21,7 @@ class ProductoService {
         name: faker.commerce.productName(),
         price: parseInt(faker.commerce.price(), 10),
         image: faker.image.imageUrl(),
+        isBlock: faker.datatype.boolean(),
       });
     }
   }
@@ -41,15 +43,20 @@ class ProductoService {
   }
 
   async findOne(id) {
-    //generando error para ver el middlewares
-    const total = this.productos.getTotal();
-    return this.productos.find((item) => item.id === id);
+    const producto = this.productos.find((item) => item.id === id);
+    if (!producto) {
+      throw boom.notFound('Product not found');
+    }
+    if (producto.isBlock) {
+      throw boom.conflict('prodcuto bloqueado');
+    }
+    return producto;
   }
 
   async update(id, cambios) {
     const index = this.productos.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error('Product not found');
+      throw boom.notFound('Product not found');
     }
 
     const producto = this.productos[index];
@@ -76,7 +83,7 @@ class ProductoService {
   async delete(id) {
     const index = this.productos.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error('Product not found');
+      throw boom.notFound('Product not found');
     }
 
     this.productos.splice(index, 1);

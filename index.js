@@ -1,7 +1,11 @@
 const express = require('express'); //importamos express
 const routerApi = require('./routes');
 
-const { logErrors, errorHandler } = require('./middlewares/error.handler');
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler,
+} = require('./middlewares/error.handler');
 
 const app = express(); //construye una app de express
 const port = 3000;
@@ -14,6 +18,7 @@ routerApi(app);
    en el que se van a ejecutar uno tras otro
 */
 app.use(logErrors);
+app.use(boomErrorHandler);
 app.use(errorHandler);
 
 app.listen(port, () => {
